@@ -3,7 +3,7 @@ import { Setup } from "./Setup";
 import fragmentShader from "../../shader/mv/fragmentShader.glsl"
 import vertexShader from "../../shader/mv/vertexShader.glsl"
 import { PARAMS } from "./constants";
-import { getImagePositionAndSize, ImagePositionAndSize } from "../utils/getElementSize";
+import { getElementPositionAndSize, ElementPositionAndSize } from "../utils/getElementSize";
 
 export class MvMesh {
   setup: Setup
@@ -13,19 +13,19 @@ export class MvMesh {
 
   constructor(setup: Setup) {
     this.setup = setup
-    this.element = document.querySelector<HTMLImageElement>('.js-mv-image')
+    this.element = document.querySelector<HTMLImageElement>('.js-effect')
     this.mesh = null
     this.loader = null
   }
 
   init() {
     if(!this.element) return
-    const info = getImagePositionAndSize(this.element);
+    const info = getElementPositionAndSize(this.element);
     this.setUniforms(info)
     this.setMesh(info);
   }
 
-  setUniforms(info: ImagePositionAndSize) {
+  setUniforms(info: ElementPositionAndSize) {
     const loader = this.setup.loader;
 
     const commonUniforms = {
@@ -35,14 +35,13 @@ export class MvMesh {
     };
 
     return {
+      uIntensity: { value: 5.0 },
       uPlaneSize: { value: new THREE.Vector2(info.dom.width, info.dom.height)},
-      uTexture: { value: loader.load(info.image.src) },
-      uTextureSize: { value: new THREE.Vector2(info.image.width, info.image.height) },
-      ...commonUniforms
+      ...commonUniforms,
     }
   }
 
-  setMesh(info: ImagePositionAndSize) {
+  setMesh(info: ElementPositionAndSize) {
     const uniforms = this.setUniforms(info);
     const geometry = new THREE.PlaneGeometry(1, 1, 100, 100);
     const material = new THREE.ShaderMaterial({
@@ -61,11 +60,16 @@ export class MvMesh {
 
   updateMesh() {
     if(!this.mesh || !this.element) return;
-      const info = getImagePositionAndSize(this.element);
+      const info = getElementPositionAndSize(this.element);
       this.mesh.scale.x = info.dom.width;
       this.mesh.scale.y = info.dom.height;
       this.mesh.position.x = info.dom.x;
       this.mesh.position.y = info.dom.y;
+  }
+
+  raf() {
+    if (!this.mesh) return;
+    (this.mesh.material as any).uniforms.uTime.value += 0.01;
   }
 
   resize() {

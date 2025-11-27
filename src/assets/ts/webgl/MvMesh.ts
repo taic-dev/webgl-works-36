@@ -13,7 +13,7 @@ export class MvMesh {
 
   constructor(setup: Setup) {
     this.setup = setup
-    this.element = document.querySelector<HTMLImageElement>('.js-effect')
+    this.element = document.querySelector<HTMLImageElement>('.plane')
     this.mesh = null
     this.loader = null
   }
@@ -26,8 +26,6 @@ export class MvMesh {
   }
 
   setUniforms(info: ElementPositionAndSize) {
-    const loader = this.setup.loader;
-
     const commonUniforms = {
       uResolution: { value: new THREE.Vector2(PARAMS.WINDOW.W, PARAMS.WINDOW.H)},
       uMouse: { value: new THREE.Vector2(0, 0) },
@@ -35,7 +33,6 @@ export class MvMesh {
     };
 
     return {
-      uIntensity: { value: 5.0 },
       uPlaneSize: { value: new THREE.Vector2(info.dom.width, info.dom.height)},
       ...commonUniforms,
     }
@@ -43,7 +40,7 @@ export class MvMesh {
 
   setMesh(info: ElementPositionAndSize) {
     const uniforms = this.setUniforms(info);
-    const geometry = new THREE.PlaneGeometry(1, 1, 100, 100);
+    const geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
     const material = new THREE.ShaderMaterial({
       uniforms: uniforms,
       fragmentShader: fragmentShader,

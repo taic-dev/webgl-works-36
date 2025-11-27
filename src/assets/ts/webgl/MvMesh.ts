@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { Setup } from "./Setup";
 import fragmentShader from "../../shader/mv/fragmentShader.glsl"
 import vertexShader from "../../shader/mv/vertexShader.glsl"
-import { PARAMS } from "./constants";
 import { getElementPositionAndSize, ElementPositionAndSize } from "../utils/getElementSize";
 
 export class MvMesh {
@@ -27,12 +26,13 @@ export class MvMesh {
 
   setUniforms(info: ElementPositionAndSize) {
     const commonUniforms = {
-      uResolution: { value: new THREE.Vector2(PARAMS.WINDOW.W, PARAMS.WINDOW.H)},
+      uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight)},
       uMouse: { value: new THREE.Vector2(0, 0) },
       uTime: { value: 0.0 },
     };
 
     return {
+      uPlanePos: { value: new THREE.Vector2(info.dom.x, info.dom.y) },
       uPlaneSize: { value: new THREE.Vector2(info.dom.width, info.dom.height)},
       ...commonUniforms,
     }
@@ -57,16 +57,24 @@ export class MvMesh {
 
   updateMesh() {
     if(!this.mesh || !this.element) return;
+      const { scale, position } = this.mesh;
       const info = getElementPositionAndSize(this.element);
-      this.mesh.scale.x = info.dom.width;
-      this.mesh.scale.y = info.dom.height;
-      this.mesh.position.x = info.dom.x;
-      this.mesh.position.y = info.dom.y;
+      
+      scale.x = info.dom.width;
+      scale.y = info.dom.height;
+      position.x = info.dom.x;
+      position.y = info.dom.y;
+
+      const material = (this.mesh.material as any);
+      material.uniforms.uPlaneSize.value = new THREE.Vector2(info.dom.width, info.dom.height);
+      material.uniforms.uPlanePos.value = new THREE.Vector2(info.dom.x, info.dom.y);
+      material.uniforms.uResolution.value = new THREE.Vector2(window.innerWidth, window.innerHeight);
   }
 
   raf() {
     if (!this.mesh) return;
-    (this.mesh.material as any).uniforms.uTime.value += 0.01;
+    const material = (this.mesh.material as any);
+    material.uniforms.uTime.value += 0.01;
   }
 
   resize() {

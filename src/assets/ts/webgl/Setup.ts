@@ -30,22 +30,22 @@ export class Setup {
     this.setRenderer();
     this.setScene();
     this.setCamera();
-    this.setAmbientLight();
-    this.setDirectionalLight();
+    // this.setAmbientLight();
+    // this.setDirectionalLight();
     this.setGui();
     this.setHelper();
   }
 
   setRenderer() {
     const element = document.querySelector('.webgl');
-    this.renderer = new THREE.WebGLRenderer({ alpha: true });
+    this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     this.renderer.setSize(PARAMS.WINDOW.W, PARAMS.WINDOW.H);
     element?.appendChild(this.renderer.domElement);
   }
 
   updateRenderer() {
     this.renderer?.setSize(window.innerWidth, window.innerHeight);
-    this.renderer?.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer?.setPixelRatio(Math.min(window.devicePixelRatio, 1));
   }
 
   setScene() {
@@ -63,6 +63,7 @@ export class Setup {
     const dist = window.innerHeight / 2 / Math.tan(fovRad);
 
     this.camera.position.set(0, 0, dist);
+    this.camera.lookAt(new THREE.Vector3());
   }
 
   updateCamera() {
@@ -72,6 +73,7 @@ export class Setup {
     const fovRad = (PARAMS.CAMERA.FOV / 2) * (Math.PI / 180);
     const dist = window.innerHeight / 2 / Math.tan(fovRad);
     this.camera.position.set(0, 0, dist);
+    this.camera.lookAt(new THREE.Vector3());
   }
 
   setDirectionalLight() {

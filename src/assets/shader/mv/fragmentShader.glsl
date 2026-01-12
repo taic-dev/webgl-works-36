@@ -21,24 +21,5 @@ void main() {
   uv = uv - 0.5;
   uv.x *= (uResolution.x / uResolution.y);
 
-  float d = length(uv);
-
-
-  float edge1 = smoothstep(0.0, 0.5, d);
-  float edge2 = smoothstep(0.4, 0.5, d);
-  float ring = edge1 - edge2;
-
-  float n = noise2d(uv);
-  float nEdge1 = smoothstep(0.5, 0.2, n);
-  float nEdge2 = smoothstep(0.2, 0.3, n);
-  float nRing = nEdge1 - nEdge2;
-
-  float h = (edge1);
-  float s = (edge1 * 0.2);
-  float l = 1.;
-  vec3 rainbow = hsv2rgb(vec3(h, s, l));
-  float edge3 = smoothstep(0.1, 0.2, n);
-
-
-  gl_FragColor = vec4(vec3(rainbow), 1.);
+  gl_FragColor = vec4(uv, uv.x, 1.);
 }

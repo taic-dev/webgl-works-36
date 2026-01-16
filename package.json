@@ -23,5 +23,8 @@
     "vite-plugin-glslify": "^2.1.0",
     "vite-plugin-gltf": "^4.0.0",
     "vite-plugin-sass-glob-import": "^5.0.0"
+  },
+  "volta": {
+    "node": "20.19.1"
   }
 }

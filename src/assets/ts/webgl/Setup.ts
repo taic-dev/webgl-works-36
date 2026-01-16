@@ -18,7 +18,7 @@ export class Setup {
     this.scene = null;
     this.camera = null;
     this.ambientLight = null;
-    this.directionalLight = null
+    this.directionalLight = null;
     this.controls = null;
     this.guiValue = null
     this.loader = new THREE.TextureLoader();
@@ -30,10 +30,7 @@ export class Setup {
     this.setRenderer();
     this.setScene();
     this.setCamera();
-    // this.setAmbientLight();
-    // this.setDirectionalLight();
     this.setGui();
-    this.setHelper();
   }
 
   setRenderer() {
@@ -90,11 +87,15 @@ export class Setup {
   setGui() {
     const gui = new GUI();
     this.guiValue = {
-      color: { r: 0.8314, g: 0.898, b: 1.0 },
-      wireframe: false,
+      color: { r: 0, g: 0.525, b: 0.702 },
+      uR: 0.23,
+      uG: 0.07,
+      uB: 0,
     };
-    gui.addColor(this.guiValue, "color")
-    gui.add(this.guiValue, "wireframe");
+    gui.addColor(this.guiValue, "color");
+    gui.add(this.guiValue, "uR", 0, 1, 0.01);
+    gui.add(this.guiValue, "uG", 0, 1, 0.01);
+    gui.add(this.guiValue, "uB", 0, 1, 0.01);
   }
 
 
